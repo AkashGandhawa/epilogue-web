@@ -105,6 +105,8 @@ function App() {
 
   const sliderRef = useRef(null);
   const [isSliderPaused, setIsSliderPaused] = useState(false);
+  const [bandImageLoaded, setBandImageLoaded] = useState(false);
+
 
   // Autonomous sliding for the MoraSpirit club gallery
   useEffect(() => {
@@ -420,17 +422,24 @@ function App() {
             className="absolute right-0 lg:right-[8%] bottom-0 w-[450px] h-[450px] bg-gradient-to-tr from-green-500/15 to-cyan-500/15 rounded-full blur-[100px] transition-transform duration-300 ease-out"
           />
           
-          {/* Cutout Image of Band Members with 3D Parallax */}
-          <img
-            ref={bandRef}
-            src="/band/daddy_cutout.png"
-            alt="Daddy Band Members"
-            className="relative max-h-[80vh] md:max-h-[85vh] object-contain w-auto right-0 lg:right-[2%] bottom-[-5%] transition-transform duration-300 ease-out drop-shadow-[0_20px_50px_rgba(34,255,68,0.15)] filter saturate-[1.1]"
-            style={{
-              transformStyle: 'preserve-3d',
-              willChange: 'transform'
-            }}
-          />
+          {/* Wrapper for smooth image loading and entry transition */}
+          <div className={`transition-all duration-[1200ms] ease-out ${
+            bandImageLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
+          }`}>
+            {/* Cutout Image of Band Members with 3D Parallax */}
+            <img
+              ref={bandRef}
+              src="/band/daddy_cutout.png"
+              alt="Daddy Band Members"
+              onLoad={() => setBandImageLoaded(true)}
+              className="relative max-h-[80vh] md:max-h-[85vh] object-contain w-auto right-0 lg:right-[2%] bottom-[-5%] transition-transform duration-300 ease-out drop-shadow-[0_20px_50px_rgba(34,255,68,0.15)] filter saturate-[1.1]"
+              style={{
+                transformStyle: 'preserve-3d',
+                willChange: 'transform'
+              }}
+            />
+          </div>
+
         </div>
 
         {/* Hero Content Grid */}
