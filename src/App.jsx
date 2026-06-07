@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import lottie from 'lottie-web';
 
 /* ─── Flying Music Notes Component (Pure CSS 3D Effect) ─── */
@@ -58,10 +58,11 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [loadProgress, setLoadProgress] = useState(0);
   const [splitLoader, setSplitLoader] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-  const [isDarkMode, setIsDarkMode] = useState(document.documentElement.classList.contains('dark'));
   const [showToast, setShowToast] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const lottieContainer1 = useRef(null);
+  const lottieContainer2 = useRef(null);
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -79,27 +80,9 @@ function App() {
     }
   }, [showToast]);
 
-  const lottieContainer1 = useRef(null);
-  const lottieContainer2 = useRef(null);
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
-  // Prevent scroll when mobile drawer is open
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      // Avoid resetting overflow if lightbox is open
-      const isLightboxActive = document.querySelector('.fixed.inset-0.z-\\[100000\\]');
-      if (!isLightboxActive) {
-        document.body.style.overflow = 'auto';
-      }
-    }
-  }, [isMobileMenuOpen]);
+
 
   const [days, setDays] = useState('00');
   const [hours, setHours] = useState('00');
@@ -119,6 +102,17 @@ function App() {
   // Lightbox state
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  // Prevent scroll when loading (unless loader is splitting), mobile drawer, or lightbox is open
+  useEffect(() => {
+    if ((loading && !splitLoader) || isMobileMenuOpen || lightboxOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+  }, [loading, splitLoader, isMobileMenuOpen, lightboxOpen]);
 
   const sliderRef = useRef(null);
   const [isSliderPaused, setIsSliderPaused] = useState(false);
@@ -152,12 +146,10 @@ function App() {
   const openLightbox = useCallback((index) => {
     setLightboxIndex(index);
     setLightboxOpen(true);
-    document.body.style.overflow = 'hidden';
   }, []);
 
   const closeLightbox = useCallback(() => {
     setLightboxOpen(false);
-    document.body.style.overflow = 'auto';
   }, []);
 
   const nextImage = useCallback((e) => {
@@ -204,7 +196,6 @@ function App() {
   // Force dark mode always
   useEffect(() => {
     document.documentElement.classList.add('dark');
-    setIsDarkMode(true);
   }, []);
 
   const heroRef = useRef(null);
@@ -215,6 +206,8 @@ function App() {
   // Simulated loading progress
   useEffect(() => {
     let progressInterval;
+    let timer1;
+    let timer2;
     let currentProgress = 0;
     
     progressInterval = setInterval(() => {
@@ -225,41 +218,50 @@ function App() {
       if (currentProgress >= 100) {
         clearInterval(progressInterval);
         
-        const timer1 = setTimeout(() => {
+        timer1 = setTimeout(() => {
           setSplitLoader(true);
-          const timer2 = setTimeout(() => {
+          timer2 = setTimeout(() => {
             setLoading(false);
-            document.body.style.overflow = 'auto';
           }, 600);
-          return () => clearTimeout(timer2);
         }, 200);
-        return () => clearTimeout(timer1);
       }
     }, 80);
 
-    return () => clearInterval(progressInterval);
+    return () => {
+      if (progressInterval) clearInterval(progressInterval);
+      if (timer1) clearTimeout(timer1);
+      if (timer2) clearTimeout(timer2);
+    };
   }, []);
 
   // Lottie Animation Loading
   useEffect(() => {
     let anim1;
     let anim2;
-    if (loading) {
-      anim1 = lottie.loadAnimation({
-        container: lottieContainer1.current,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: '/56a034a2-116d-11ee-ade5-efd77f21c859.json',
-      });
+    if (loading && lottieContainer1.current && lottieContainer2.current) {
+      try {
+        anim1 = lottie.loadAnimation({
+          container: lottieContainer1.current,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: '/56a034a2-116d-11ee-ade5-efd77f21c859.json',
+        });
+      } catch (err) {
+        console.error("Lottie 1 load error:", err);
+      }
 
-      anim2 = lottie.loadAnimation({
-        container: lottieContainer2.current,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: '/e3be30c2-1150-11ee-9de2-dfa41e0fb27e.json',
-      });
+      try {
+        anim2 = lottie.loadAnimation({
+          container: lottieContainer2.current,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: '/e3be30c2-1150-11ee-9de2-dfa41e0fb27e.json',
+        });
+      } catch (err) {
+        console.error("Lottie 2 load error:", err);
+      }
     }
     return () => {
       if (anim1) anim1.destroy();
@@ -414,10 +416,14 @@ function App() {
               <p className="font-label-caps text-[11px] text-green-400 tracking-widest animate-pulse uppercase">
                 Untangled Frequencies Coming...
               </p>
+              <p className="text-white/60 text-[10px] font-mono mt-3 tracking-widest">
+                {loadProgress}%
+              </p>
             </div>
           </div>
         </div>
       )}
+
 
       {/* Ambient Background Blobs */}
       <div className="ambient-blob top-0 left-[-20%]"></div>
