@@ -712,8 +712,8 @@ function App() {
             EPILOGUE '26
           </div>
           <div className="flex gap-4 mb-8 text-gray-600 dark:text-secondary-fixed-dim">
-            <a className="hover:text-green-700 dark:hover:text-primary-container transition-colors flex items-center gap-2" href="mailto:info@epilogue26.com">
-              <span className="material-symbols-outlined text-sm">mail</span> info@epilogue26.com
+            <a className="hover:text-green-700 dark:hover:text-primary-container transition-colors flex items-center gap-2" href="mailto:hr@moraspirit.com">
+              <span className="material-symbols-outlined text-sm">mail</span> hr@moraspirit.com
             </a>
             <a className="hover:text-green-700 dark:hover:text-primary-container transition-colors flex items-center gap-2" href="https://moraspirit.com" target="_blank" rel="noopener noreferrer">
               <span className="material-symbols-outlined text-sm">language</span> moraspirit.com
