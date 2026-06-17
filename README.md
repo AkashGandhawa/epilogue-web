@@ -1,16 +1,72 @@
-# React + Vite
+# Epilogue Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend project built with React + Vite.
 
-Currently, two official plugins are available:
+## Run Locally (localhost)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### 1. Prerequisites
 
-## React Compiler
+Make sure you have:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+ (recommended: latest LTS)
+- npm (comes with Node.js)
 
-## Expanding the ESLint configuration
+Check versions:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+node -v
+npm -v
+```
+
+### 2. Clone the repository
+
+```bash
+git clone <your-repo-url>
+cd epilogue-web
+```
+
+### 3. Install dependencies
+
+```bash
+npm install
+```
+
+### 4. Start the development server
+
+```bash
+npm run dev
+```
+
+Vite will print a local URL in the terminal, usually:
+
+```text
+http://localhost:5173/
+```
+
+Open that URL in your browser.
+
+## Available Scripts
+
+- `npm run dev` - Start local development server
+- `npm run build` - Build production files into `dist/`
+- `npm run preview` - Preview the production build locally
+- `npm run lint` - Run ESLint checks
+
+## Build and Preview Production Locally
+
+```bash
+npm run build
+npm run preview
+```
+
+Preview URL is usually:
+
+```text
+http://localhost:4173/
+```
+
+## Troubleshooting
+
+- If `npm install` fails, delete `node_modules` and `package-lock.json`, then run `npm install` again.
+- If port `5173` is already in use, Vite will automatically choose another free port.
+- If the app does not load, check terminal errors first.
