@@ -133,7 +133,7 @@ export default function Hero() {
               muted
               loop
               playsInline
-              preload="none"
+              preload="metadata"
               className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none select-none"
               style={{
                 transform: `scale(${videoScale})`,
