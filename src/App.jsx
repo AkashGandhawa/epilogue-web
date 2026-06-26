@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import Loader from './components/Loader';
+import OfferBanner from './components/OfferBanner';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Lineup from './components/Lineup';
@@ -20,6 +21,18 @@ function App() {
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [ticketFormOpen, setTicketFormOpen] = useState(false);
   const [showAdModal, setShowAdModal] = useState(false);
+  const [isOfferLive, setIsOfferLive] = useState(true);
+
+  useEffect(() => {
+    const target = new Date('2026-06-29T23:59:59+05:30').getTime();
+    const interval = setInterval(() => {
+      if (new Date().getTime() > target) {
+        setIsOfferLive(false);
+        clearInterval(interval);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   // MoraSpirit Gallery images (representing the club)
   const galleryImages = [
@@ -120,11 +133,15 @@ function App() {
       <div className="ambient-blob top-0 left-[-20%]"></div>
       <div className="ambient-blob bottom-0 right-[-20%]"></div>
 
+      {/* ──── OFFER BANNER ──── */}
+      {isOfferLive && <OfferBanner onReserve={() => setTicketFormOpen(true)} />}
+
       {/* ──── TOP NAVIGATION ──── */}
       <Navbar 
         isMobileMenuOpen={isMobileMenuOpen} 
         setIsMobileMenuOpen={setIsMobileMenuOpen} 
         onBuyTickets={() => setTicketFormOpen(true)}
+        hasOfferBanner={isOfferLive}
       />
 
       {/* ──── CINEMATIC HERO ──── */}

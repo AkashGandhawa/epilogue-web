@@ -10,16 +10,15 @@ export default function BundleOfferAd({ onReserve }) {
   const [isRevealed, setIsRevealed] = useState(false);
 
   useEffect(() => {
-    // target is today at 7:00 PM SL Time
-    // Using explicit ISO string with timezone: 2026-06-26T19:00:00+05:30
-    const target = new Date('2026-06-26T19:00:00+05:30').getTime();
+    // Target is June 29th, 2026, 11:59:59 PM SL Time
+    const target = new Date('2026-06-29T23:59:59+05:30').getTime();
 
     const checkTime = () => {
       const now = new Date().getTime();
       const distance = target - now;
 
       if (distance <= 0) {
-        setIsRevealed(true);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         return true;
       } else {
         setTimeLeft({
@@ -73,13 +72,18 @@ export default function BundleOfferAd({ onReserve }) {
               </p>
             </div>
 
-            {!isRevealed ? (
-              <div className="w-full bg-[#0c0f0f]/80 border border-green-500/20 p-5 rounded-2xl">
+            <div className="w-full space-y-6">
+              <div className="inline-block bg-green-500/20 border border-green-500/40 text-green-400 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider animate-pulse">
+                Offer is Live Now!
+              </div>
+              
+              <div className="w-full bg-[#0c0f0f]/80 border border-green-500/20 p-5 rounded-2xl mb-4">
                 <h3 className="font-label-caps text-xs text-green-500 tracking-widest uppercase mb-4 font-bold">
-                  Offer Drops In...
+                  Offer Ends In...
                 </h3>
                 <div className="flex gap-4 md:gap-6 justify-center md:justify-start">
                   {[
+                    { value: timeLeft.days, label: 'DAYS' },
                     { value: timeLeft.hours, label: 'HRS' },
                     { value: timeLeft.minutes, label: 'MINS' },
                     { value: timeLeft.seconds, label: 'SECS' },
@@ -94,23 +98,18 @@ export default function BundleOfferAd({ onReserve }) {
                   ))}
                 </div>
               </div>
-            ) : (
-              <div className="w-full space-y-6">
-                <div className="inline-block bg-green-500/20 border border-green-500/40 text-green-400 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider animate-pulse">
-                  Offer is Live Now!
-                </div>
-                <div>
-                  <button 
-                    onClick={onReserve}
-                    className="w-full md:w-auto bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(34,255,68,0.3)] hover:shadow-[0_0_30px_rgba(34,255,68,0.5)] transform hover:-translate-y-1 text-lg flex items-center justify-center gap-2"
-                  >
-                    <span>Reserve Bundle Now</span>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                  </button>
-                  <p className="text-[10px] text-gray-500 mt-3 font-mono tracking-wide uppercase">Offer valid until 29th, 11:59 PM</p>
-                </div>
+
+              <div>
+                <button 
+                  onClick={onReserve}
+                  className="w-full md:w-auto bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(34,255,68,0.3)] hover:shadow-[0_0_30px_rgba(34,255,68,0.5)] transform hover:-translate-y-1 text-lg flex items-center justify-center gap-2"
+                >
+                  <span>Reserve Bundle Now</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
+                <p className="text-[10px] text-gray-500 mt-3 font-mono tracking-wide uppercase">Offer valid until 29th, 11:59 PM</p>
               </div>
-            )}
+            </div>
             
           </div>
 
